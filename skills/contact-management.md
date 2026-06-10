@@ -56,21 +56,48 @@ the existing link with `alreadyLinked: true`. Safe to retry.
 
 Accepts both canonical names and extraction-slug aliases (auto-mapped):
 
-| Canonical             | Extraction slug |
+| Canonical                              | Extraction slug |
 |---|---|
-| Buyer                 | Buyer           |
-| Seller                | Seller          |
-| Buying Agent          | BuyerAgent      |
-| Listing Agent         | SellerAgent     |
-| Title Company         | TitleCompany    |
-| Lender / Loan Officer | Lender          |
-| Inspector             | Inspector       |
-| Appraiser             | Appraiser       |
-| Attorney              | Attorney        |
+| Buyer                                  | Buyer           |
+| Seller                                 | Seller          |
+| Buying Agent                           | BuyerAgent      |
+| Listing Agent                          | SellerAgent     |
+| Title Company                          | TitleCompany    |
+| Lender                                 | Lender          |
+| Loan Officer                           | —               |
+| Home Inspector                         | —               |
+| Appraiser                              | —               |
+| Buyer's Attorney / Seller's Attorney   | —               |
+| Transaction Coordinator                | —               |
 
-Other roles defined in the TC's organization (e.g. Transaction Coordinator,
-Photographer) also resolve via `contact_roles.Name`. Returns `ROLE_NOT_FOUND`
-with the list of common roles in the error message when no match.
+There is no plain "Attorney" or "Inspector" role — use the side-specific
+attorney roles and "Home Inspector". Custom roles defined in the TC's
+organization (e.g. Photographer, Stager) also resolve via `contact_roles.Name`.
+Returns `ROLE_NOT_FOUND` listing every role actually available to the org
+when no match — pick from that list rather than guessing.
+
+## Creating a new role
+
+When `ROLE_NOT_FOUND` shows nothing that fits and the TC agrees a new role is
+needed:
+
+```
+create_contact_role(
+  name: "Closing Attorney",
+  category: "Legal",          // Client | Professional | Agent | Service Provider |
+                              // Legal | Lending | Property | Rental | Services | Other
+  partyKey: "buyer_side",     // optional grouping on the Assign Contacts dropdown
+  allowMultiple: false
+)
+```
+
+**Idempotent on name** — an exact match returns the existing role with
+`created: false`. A *similar* name (asking for "Attorney" when "Buyer's
+Attorney" exists) fails with `SIMILAR_ROLES_EXIST` and the near-matches;
+prefer one of those — system roles work better across the app (overview
+cards, contact blocks, smart fields) than custom ones. Only re-emit with
+`ignoreSimilar: true` after the TC confirms the new role is genuinely
+distinct.
 
 ## During email triage
 
@@ -100,5 +127,6 @@ have everything available.
 | `VALIDATION_FAILED`     | Re-emit with the field the message identifies.              |
 | `CONTACT_NOT_FOUND`     | Call `search_contacts`; the ID is wrong or cross-org.       |
 | `TRANSACTION_NOT_FOUND` | Call `search_transactions`; the ID is wrong or cross-org.   |
-| `ROLE_NOT_FOUND`        | Re-emit with a canonical role name. The error lists common ones. |
+| `ROLE_NOT_FOUND`        | Re-emit with one of the available roles the error lists. If nothing fits, offer `create_contact_role`. |
+| `SIMILAR_ROLES_EXIST`   | Prefer one of the listed near-matches; only re-emit `create_contact_role` with `ignoreSimilar: true` after the TC confirms. |
 | `CREATE_FAILED`         | A write race; retry `create_contact` or fall through to `search_contacts` to find the parallel-created row. |
