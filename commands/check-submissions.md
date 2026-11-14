@@ -46,4 +46,4 @@ Surface incoming intake-form submissions across the user's active forms, summari
 - **Don't auto-spin a submission into a transaction.** `contract-intake` is its own multi-step workflow and the user should drive it.
 - **Don't open every submission with `get_form_submission`** if you only need the summary fields — that's 1 call per submission and 50 unread submissions = 50 extra round-trips. Filter to "new + interesting" first.
 - **Don't claim the submission status changed in DocJacket** — there's no MCP write tool for that yet; the user has to mark it processed in the web UI.
-- **Don't reply or log without explicit confirmation** — per `execution-workflow`.
+- **Don't reply or log without explicit confirmation** — per `execution-workflow`. A reply is previewed first: show it in full and call `confirm_email_send` only on an explicit yes. If it comes back `parked_for_review`, report it as waiting for approval, not sent.

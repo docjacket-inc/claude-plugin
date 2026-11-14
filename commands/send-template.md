@@ -4,19 +4,19 @@ description: Send an email to a party using a saved template — pick template, 
 
 # Send Template
 
-Walk the user from "send the intro to the buyer on the Smith deal" through to a sent email, using their saved email templates and connected mailbox.
+Walk the user from "send the intro to the buyer on the Smith deal" through to a previewed, confirmed email, using their saved email templates.
 
 1. **Identify the transaction.** If the user named an address, resolve via `search_transactions`. If ambiguous (multiple matches or no clear pick), ask.
 2. **Identify the template.** Call `list_email_templates` (optionally filter by `category`). If the user named a template, find the close match in the result. If still ambiguous, show 3-5 options inline and ask. If no match, ask before falling back to a generic compose.
 3. **Render the template** with `render_email_template` — pass the `templateId` and `transactionId`. The response carries the rendered subject + body + the list of merge fields that resolved (or didn't).
 4. **Identify the recipient.** Call `get_contacts` (or `find_contact_by_email` if the user gave you an address). Confirm the role — buyer / seller / listing agent / lender / title rep — drives which `send_*` tool to call.
 5. **Show the rendered email inline** with subject, recipient name + email, and body. Flag any unresolved merge fields ("⚠️ `{{LenderName}}` didn't resolve — should I fill in manually or skip?").
-6. **On confirmation, fire the matching send tool:**
+6. **On confirmation, call the matching send tool:**
    - Buyer / seller (client side) → **`send_client_update`**
    - Listing agent / lender / title rep / inspector → **`send_agent_followup`** or **`send_document_request`** (if the template is asking for docs)
    - Direct one-off to a contact who's a party on the deal but doesn't fit the above → **`send_email_to_agent`**
 
-All `send_*` tools route through the user's connected Gmail / Outlook — no Postmark, no separate "outbox". Confirmed-then-sent.
+A `send_*` call sends nothing. If it returns `awaiting_confirmation`, show the complete preview and call `confirm_email_send` with the `confirmCode` only on the user's explicit yes (`decision: "discard"` on no). If it returns `parked_for_review`, the email is waiting in the DocJacket review queue for a team member: tell the user it is waiting for approval, not sent. Only `confirm_email_send` returning `queued` means it was approved and is on its way. Error codes: see `execution-workflow`.
 
 ## Example
 

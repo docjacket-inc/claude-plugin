@@ -15,15 +15,16 @@ Walk the TC from "I just got a signed contract" to "the deal is fully set up in 
 
 Per the `contract-intake` skill recipe:
 
-1. **Upload + extract** — three paths, pick by where the PDF lives:
+1. **Upload + extract** — four paths, pick by where the PDF lives:
    - **A (canonical):** if the doc is already in DocJacket (DocDrop / email / web wizard / prior call), `list_documents({ hasExtraction: false })` to discover it, then `extract_existing_document({ documentId, state?, side?, documentTypeHint? })`. Works in every MCP client; bytes never leave DocJacket.
-   - **B (Claude.ai paid):** PDF attached in chat, code execution available. `request_upload_url({ filename })` → curl PUT from sandbox → `kick_off_extraction({ uploadId, filename, ... })`. Requires `mcp.docjacket.com` whitelisted under Settings → Code execution.
-   - **C (fallback):** tiny PDF (<1 MB) attached to chat, no other option. `upload_document_for_extraction({ fileBase64, filename, ... })`. Bytes ride in chat context — compounds with later turns.
+   - **B (email, default for a PDF not in DocJacket):** ask the user to email or forward it from their own address to `get_organization_summary` → `intake_addresses.new_deal.address`, then poll `list_new_deal_intake`. Email from anyone else waits in the Review Queue.
+   - **C (code sandbox):** only if the sandbox can reach the `uploadHost` that `request_upload_url` returns. `request_upload_url({ filename })` → curl PUT from sandbox → `kick_off_extraction({ uploadId, filename, ... })`. On a network or DNS error, stop and use B.
+   - **D (last resort):** tiny PDF (<1 MB) attached to chat, no other option. `upload_document_for_extraction({ fileBase64, filename, ... })`. Bytes ride in chat context — compounds with later turns.
 2. **Poll** — call `get_extraction_results` every 2-3 seconds until `status: "complete"`. Surface a "still working…" update if the wait exceeds 15 seconds. Cap at 10 minutes total.
 3. **Confirm** — paraphrase the extracted fields (property, parties, dates, financials) and ask the TC to confirm or edit. Don't dump JSON.
 4. **Apply** — call `apply_extraction` with any user edits as a flat `overrides` map. The response gives you the new `transactionId` — pin every follow-up call to it.
 5. **Build the timeline** — propose computed dates (EMD, inspection, appraisal, financing, walkthrough) based on contract terms. On approval, call `add_key_dates_batch`.
-6. **Send intros** — `render_email_template` first, present drafts, then `send_client_update` + `send_email_to_agent`.
+6. **Send intros** — `render_email_template` first, present drafts, then `send_client_update` + `send_email_to_agent`. Each returns a preview (`awaiting_confirmation`): show it in full and call `confirm_email_send` only on the TC's explicit yes. A `parked_for_review` intro is waiting for approval in DocJacket, not sent.
 7. **Schedule reminders** — `create_reminder` for the deadlines the TC names ("nudge the agent 2 days before EMD" → one call).
 8. **Confirm** — call `get_intake_status` and present the final summary with the portal link from `get_portal_link`.
 

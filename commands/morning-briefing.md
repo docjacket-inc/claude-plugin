@@ -46,6 +46,6 @@ Lead with the most urgent items. Don't list deals with nothing demanding attenti
 
 Offer to act:
 
-> _"Want me to send chases for Patel's survey + Wong's estoppel? Both go via `send_document_request` — I'll send straight from your connected Gmail once you say yes."_
+> _"Want me to send chases for Patel's survey + Wong's estoppel? Both go via `send_document_request` — I'll show you each email in full first, and send it only when you say yes."_
 
-Per `execution-workflow`, wait for explicit confirmation before firing any `send_*` / `create_*` / `update_*` tool.
+Per `execution-workflow`, wait for explicit confirmation before calling any `send_*` / `create_*` / `update_*` tool.

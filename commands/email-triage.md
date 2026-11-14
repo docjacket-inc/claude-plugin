@@ -30,7 +30,7 @@ For unmatched emails, list them in a final "Unmatched" group; ask the user if an
 
 ## On approval — chase / draft follow-up
 
-If the user approves drafting a chase email or status update, switch to the `follow-up-drafting` skill — compose, confirm, fire the matching `send_*` tool. Per `execution-workflow`, the chat is the approval gate.
+If the user approves drafting a chase email or status update, switch to the `follow-up-drafting` skill — compose, confirm, call the matching `send_*` tool. Per `execution-workflow`, the call returns a preview: show it in full and send with `confirm_email_send` only on an explicit yes (a `parked_for_review` result means it is waiting for approval, not sent).
 
 ## On approval — file an attachment
 

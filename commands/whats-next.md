@@ -33,10 +33,10 @@ Surface the urgency-ranked feed of open tasks + Key Dates across the user's orga
 
 Then offer to act:
 
-> _"Want me to chase Patel's survey + Wong's estoppel? Both go via `send_document_request` — I'll send from your connected Gmail once you confirm."_
+> _"Want me to chase Patel's survey + Wong's estoppel? Both go via `send_document_request` — I'll show you each email in full first, and send it only when you say yes."_
 
 ## Don't
 
 - **Don't pad the list with low-priority items** outside the 4-week horizon — they're informational, not actionable.
 - **Don't reorder by category** (key dates vs tasks); the tool already merged them on urgency for a reason.
-- **Don't fire `send_*` / `complete_task` / `update_key_date` without explicit confirmation** — per `execution-workflow`.
+- **Don't call `send_*` / `complete_task` / `update_key_date` without explicit confirmation** — per `execution-workflow`.

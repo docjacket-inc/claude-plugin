@@ -4,8 +4,8 @@
       "type": "http",
       "url": "https://mcp.docjacket.com/mcp",
       "headers": {
-        "X-DocJacket-Source-App": "claude-desktop",
-        "X-DocJacket-Plugin-Version": "0.6.2"
+        "X-DocJacket-Source-App": "cowork",
+        "X-DocJacket-Plugin-Version": "0.8.0"
       }
     }
   }

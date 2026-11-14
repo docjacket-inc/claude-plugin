@@ -43,7 +43,7 @@ If the user names a transaction or has one in context:
 Want me to send chases for the urgent items?
 ```
 
-On user yes, per `execution-workflow`, call `send_document_request` for each (bundling items going to the same recipient into one email). Confirm bundle scope before firing.
+On user yes, per `execution-workflow`, call `send_document_request` for each (bundling items going to the same recipient into one email). Confirm bundle scope before calling. Each email gets its own preview and its own `confirm_email_send` on the user's explicit yes; a `parked_for_review` one is waiting for approval in DocJacket, not sent.
 
 ## Don't
 
