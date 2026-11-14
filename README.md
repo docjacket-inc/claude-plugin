@@ -5,7 +5,7 @@
 # DocJacket — Transaction Coordination plugin for Claude
 
 [![Plugin](https://img.shields.io/badge/Claude-plugin-blue)](https://claude.com/plugins)
-[![Version](https://img.shields.io/badge/version-0.8.0-green)]()
+[![Version](https://img.shields.io/badge/version-0.8.1-green)]()
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)]()
 
 Connect DocJacket transactions, tasks, deadlines, contacts, and document checklists to Claude. Triage your pipeline, draft and send follow-up emails from your connected Gmail/Outlook, classify inbound attachments against the right deal — all from inside Claude.
@@ -51,7 +51,7 @@ Selected highlights below. For the **live and complete** list with per-tool gotc
 
 ### Prerequisites
 
-A DocJacket account on the **Pro plan**. Connecting is free; loading tools requires Pro.
+A DocJacket account on any plan. MCP access (AI Access) is included with every DocJacket plan. On Free it is limited to 100 MCP calls per month, with limited data extractions.
 
 ### Claude.ai (web sidebar)
 
@@ -107,7 +107,7 @@ Once installed, try:
 
 ## How attribution + revocation work
 
-Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.8.0`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
+Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.8.1`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
 
 ## Optional connectors
 
@@ -118,6 +118,8 @@ The plugin composes with Claude's Gmail, Google Calendar, Google Drive, and Slac
 This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) for the full scope, per-state coverage notes, and liability framing.
 
 ## Version
+
+`0.8.1` (2026-11-14) — Listing fixes: display name "DocJacket"; documentation, support, privacy and terms links for the directory listing; repository URL points at docjacket-inc; MCP access is included with every DocJacket plan (Free: 100 MCP calls per month).
 
 `0.8.0` (2026-11-14) — Claude plugin layout (`.claude-plugin/plugin.json`, `skills/<name>/SKILL.md`, `.mcp.json`); all ten skills (adds `contract-intake` and `dj-cli`) as valid Agent Skills; OAuth sign-in only, no pasted token. Every email is shown to you and goes out only after you say yes, or waits for a team member's approval in DocJacket if your organization reviews emails.
 
