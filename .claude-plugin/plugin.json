@@ -1,7 +1,7 @@
 {
   "name": "docjacket",
-  "displayName": "DocJacket — TC Operating System",
-  "version": "0.8.0",
+  "displayName": "DocJacket",
+  "version": "0.8.1",
   "description": "Connect your DocJacket transactions, tasks, deadlines, contacts, and contingencies to Claude Code, claude.ai and Cowork. Ten skills cover contract intake, inbox triage, document filing, morning briefings, closing prep, follow-ups and contacts. Every email is shown to you in full and goes out only after you say yes (or after a team member approves it in DocJacket, if your organization reviews emails); tasks, dates and contacts update right away. Sign in to DocJacket over OAuth when you install; no token to paste. Call `mcp_catalog` after install for the live tool inventory.",
   "author": {
     "name": "DocJacket",
@@ -9,8 +9,7 @@
     "url": "https://docjacket.com"
   },
   "homepage": "https://www.docjacket.com/mcp",
-  "documentation": "https://help.docjacket.com/docs/mcp/claude",
-  "repository": "https://github.com/DocJacket-LLC/claude-plugin",
+  "repository": "https://github.com/docjacket-inc/claude-plugin",
   "license": "MIT",
   "keywords": [
     "real-estate",
@@ -31,5 +30,8 @@
   ],
   "mcpServers": "./.mcp.json",
   "icon": "./assets/logo-mark-1024.png",
-  "privacyPolicyUrl": "https://www.docjacket.com/privacy"
+  "privacyPolicyUrl": "https://www.docjacket.com/privacy",
+  "documentationUrl": "https://help.docjacket.com/docs/ai-access",
+  "supportUrl": "https://www.docjacket.com/contact",
+  "termsOfServiceUrl": "https://www.docjacket.com/terms"
 }
