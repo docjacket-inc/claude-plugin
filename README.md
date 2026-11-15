@@ -4,9 +4,7 @@
 
 # DocJacket — Transaction Coordination plugin for Claude
 
-[![Plugin](https://img.shields.io/badge/Claude-plugin-blue)](https://claude.com/plugins)
-[![Version](https://img.shields.io/badge/version-0.9.0-green)]()
-[![License](https://img.shields.io/badge/license-MIT-lightgrey)]()
+Claude plugin · version 0.9.1 · MIT license
 
 Connect DocJacket transactions, tasks, deadlines, contacts, and document checklists to Claude. Triage your pipeline, draft and send follow-up emails from your connected Gmail/Outlook, classify inbound attachments against the right deal — all from inside Claude.
 
@@ -40,7 +38,7 @@ Selected highlights below. For the **live and complete** list with per-tool gotc
 | `get_missing_documents` | Universal-baseline missing-doc detection for purchase deals |
 | `find_transaction_by_property` | Fuzzy address-to-deal matching with confidence scores |
 | `list_active_transactions` | Inbox-workflow shortcut — every active deal, optional party / key-date expansion |
-| `search_contacts` / `get_contact` | Contact lookup by name/email/phone/company |
+| `search_contacts` | Contact lookup by name/email/phone/company, or one contact in full by `contactId` |
 | `list_email_templates` / `get_email_template` / `render_email_template` | Templated email composition |
 | `send_client_update` / `send_agent_followup` / `send_document_request` / `send_email_to_agent` | Preview an email; it goes out from your connected Gmail/Outlook only after your yes (`confirm_email_send`), or waits for a team member's approval |
 | `create_tasks` / `update_key_date` / `complete_task` / `save_status_summary` | Direct execution against DocJacket |
@@ -114,7 +112,7 @@ Once installed, try:
 
 ## How attribution + revocation work
 
-Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.9.0`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
+Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.9.1`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
 
 ## Optional connectors
 
@@ -125,6 +123,8 @@ The plugin composes with Claude's Gmail, Google Calendar, Google Drive, and Slac
 This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) for the full scope, per-state coverage notes, and liability framing.
 
 ## Version
+
+`0.9.1` (2026-11-15) — Meets Anthropic's directory file and field rules for organizations that are not Anthropic-Verified. The MCP server entry moves from `.mcp.json` into `.claude-plugin/plugin.json` (`mcpServers`, same URL and headers); `LICENSE` is now `LICENSE.txt`; the SVG logo is removed (the PNG sizes stay); skill and agent frontmatter is plain `key: value` lines (skill metadata moves to a comment under the frontmatter); the stray `categories` field is gone; README badges no longer load remote images; `dj-cli` no longer shows a download-and-run install command, and `contract-intake` describes the sandbox upload without a shell upload command and points to the upload link first. Skills also follow the current tool names: `get_open_tasks` (read its `summary` for the task counts) and `search_contacts` with `contactId` for one contact in full, instead of two names `tools/list` now hides.
 
 `0.9.0` (2026-11-15) — Catches up with the current DocJacket MCP server: four new skills (`deal-updates`, `playbook-builder`, `workspace-setup`, `compliance-filing`) cover changing live deals, building Playbooks, organization setup and compliance filing; `contract-intake` adds the upload-link path (`create_upload_link`); skills use the current tool names (`review_deal_health`, `prepare_compliance_handoff`, `get_transaction_context`); stale "no upload tool" and connector text fixed.
 
@@ -159,7 +159,6 @@ This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) 
 
 | File | Size | Use |
 |---|---|---|
-| [`assets/logo-mark.svg`](assets/logo-mark.svg) | vector | source / scalable |
 | [`assets/logo-mark-32.png`](assets/logo-mark-32.png) | 32×32 | favicon, dense list rows |
 | [`assets/logo-mark-64.png`](assets/logo-mark-64.png) | 64×64 | small directory cards |
 | [`assets/logo-mark-128.png`](assets/logo-mark-128.png) | 128×128 | plugin manifest icon |
