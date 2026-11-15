@@ -8,7 +8,7 @@ Walk through every active transaction and surface what needs the user's attentio
 
 1. Call `list_active_transactions` with `include_parties: true` and `include_key_dates: true` — cache the result for the conversation.
 2. Call `get_next_required_actions` to get the org-wide ranked task + key-date list (overdue → due-72h → due-2w → due-4w).
-3. For each transaction with anything in the first three urgency tiers OR closing within 14 days, call `get_missing_documents` and `get_checklist_status` so you can mention gaps.
+3. For each transaction with anything in the first three urgency tiers OR closing within 14 days, call `get_missing_documents` and `get_open_tasks` with its `transactionId` (read `summary` for the counts) so you can mention gaps.
 4. If the Gmail / Outlook / Calendar connectors are present:
    - Check the inbox for unread threads from any party on the active deals (use the `email-triage` skill recipe)
    - Check today + tomorrow's calendar for closings / inspections / walkthroughs
