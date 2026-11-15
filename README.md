@@ -1,16 +1,14 @@
-<p align="left">
-  <img src="assets/logo-mark-128.png" alt="DocJacket" width="96" height="96" />
-</p>
-
 # DocJacket — Transaction Coordination plugin for Claude
 
-Claude plugin · version 0.9.1 · MIT license
+[DocJacket logo](assets/logo-mark-128.png)
+
+Claude plugin · version 0.9.2 · MIT license
 
 Connect DocJacket transactions, tasks, deadlines, contacts, and document checklists to Claude. Triage your pipeline, draft and send follow-up emails from your connected Gmail/Outlook, classify inbound attachments against the right deal — all from inside Claude.
 
 **Works with:** Claude.ai (sidebar) · Cowork · Claude Code · Claude Desktop
 
-![DocJacket connector in Claude](assets/screenshots/claude-connector-tools.png)
+[Screenshot: DocJacket connector in Claude](assets/screenshots/claude-connector-tools.png)
 
 ## What you get
 
@@ -112,7 +110,7 @@ Once installed, try:
 
 ## How attribution + revocation work
 
-Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.9.1`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
+The plugin sends no custom headers; the DocJacket audit log labels each call from the OAuth client name and User-Agent of the Claude client that made it. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
 
 ## Optional connectors
 
@@ -123,6 +121,8 @@ The plugin composes with Claude's Gmail, Google Calendar, Google Drive, and Slac
 This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) for the full scope, per-state coverage notes, and liability framing.
 
 ## Version
+
+`0.9.2` (2026-11-15) — Clears the remaining directory holds for organizations that are not Anthropic-Verified. The MCP server entry in `.claude-plugin/plugin.json` is now just `type` and `url`: the `X-DocJacket-Source-App` and `X-DocJacket-Plugin-Version` headers are gone, sign-in stays OAuth, and the audit log labels calls from the OAuth client name and User-Agent. The README no longer embeds images (the logo and screenshot are plain links; the image files stay), and the Status Reporter agent's `connector` field moves from its frontmatter into a comment under it.
 
 `0.9.1` (2026-11-15) — Meets Anthropic's directory file and field rules for organizations that are not Anthropic-Verified. The MCP server entry moves from `.mcp.json` into `.claude-plugin/plugin.json` (`mcpServers`, same URL and headers); `LICENSE` is now `LICENSE.txt`; the SVG logo is removed (the PNG sizes stay); skill and agent frontmatter is plain `key: value` lines (skill metadata moves to a comment under the frontmatter); the stray `categories` field is gone; README badges no longer load remote images; `dj-cli` no longer shows a download-and-run install command, and `contract-intake` describes the sandbox upload without a shell upload command and points to the upload link first. Skills also follow the current tool names: `get_open_tasks` (read its `summary` for the task counts) and `search_contacts` with `contactId` for one contact in full, instead of two names `tools/list` now hides.
 
