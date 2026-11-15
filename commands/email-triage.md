@@ -34,7 +34,7 @@ If the user approves drafting a chase email or status update, switch to the `fol
 
 ## On approval — file an attachment
 
-There is no `upload_document` MCP tool yet. After the user approves filing:
+No MCP tool files a document onto a deal (`create_upload_link` is only for a contract going through extraction). After the user approves filing:
 
 > _"I'd file the inspection report to the Smith deal, but file-on-approval via the AI isn't available yet. Upload it manually in DocJacket → Documents → Smith. Want me to create a task to track that?"_
 

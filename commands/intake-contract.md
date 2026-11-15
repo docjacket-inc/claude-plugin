@@ -15,12 +15,13 @@ Walk the TC from "I just got a signed contract" to "the deal is fully set up in 
 
 Per the `contract-intake` skill recipe:
 
-1. **Upload + extract** — four paths, pick by where the PDF lives:
+1. **Upload + extract** — five paths, in this order:
    - **A (canonical):** if the doc is already in DocJacket (DocDrop / email / web wizard / prior call), `list_documents({ hasExtraction: false })` to discover it, then `extract_existing_document({ documentId, state?, side?, documentTypeHint? })`. Works in every MCP client; bytes never leave DocJacket.
-   - **B (email, default for a PDF not in DocJacket):** ask the user to email or forward it from their own address to `get_organization_summary` → `intake_addresses.new_deal.address`, then poll `list_new_deal_intake`. Email from anyone else waits in the Review Queue.
-   - **C (code sandbox):** only if the sandbox can reach the `uploadHost` that `request_upload_url` returns. `request_upload_url({ filename })` → curl PUT from sandbox → `kick_off_extraction({ uploadId, filename, ... })`. On a network or DNS error, stop and use B.
-   - **D (last resort):** tiny PDF (<1 MB) attached to chat, no other option. `upload_document_for_extraction({ fileBase64, filename, ... })`. Bytes ride in chat context — compounds with later turns.
-2. **Poll** — call `get_extraction_results` every 2-3 seconds until `status: "complete"`. Surface a "still working…" update if the wait exceeds 15 seconds. Cap at 10 minutes total.
+   - **B (upload link, default for a PDF not in DocJacket):** `create_upload_link`, tell the user to open the link in the browser where they use DocJacket and drop the PDF, then call `get_upload_link_status` (it waits on the server) until `submitted` gives an `extractionJobId`.
+   - **C (email):** ask the user to email or forward it from their own address to `get_organization_summary` → `intake_addresses.new_deal.address`, then poll `list_new_deal_intake`. Email from anyone else waits in the Review Queue.
+   - **D (code sandbox):** only if the sandbox can reach the `uploadHost` that `request_upload_url` returns. `request_upload_url({ filename })` → curl PUT from sandbox → `kick_off_extraction({ uploadId, filename, ... })`. On a network or DNS error, stop and use B or C.
+   - **E (last resort):** tiny PDF (<1 MB) attached to chat, no other option. `upload_document_for_extraction({ fileBase64, filename, ... })`. Bytes ride in chat context — compounds with later turns.
+2. **Wait** — call `get_extraction_results`; it waits on the server (up to 30 seconds by default) and answers as soon as `status: "complete"`. While still in progress, call it again straight away. Surface a "still working…" update between calls. Cap at 10 minutes total.
 3. **Confirm** — paraphrase the extracted fields (property, parties, dates, financials) and ask the TC to confirm or edit. Don't dump JSON.
 4. **Apply** — call `apply_extraction` with any user edits as a flat `overrides` map. The response gives you the new `transactionId` — pin every follow-up call to it.
 5. **Build the timeline** — propose computed dates (EMD, inspection, appraisal, financing, walkthrough) based on contract terms. On approval, call `add_key_dates_batch`.
@@ -39,4 +40,4 @@ Per the `contract-intake` skill:
 - Don't pre-populate `overrides` with every field — only the keys the TC actually edited.
 - Don't fabricate dates the contract doesn't state.
 - Don't call `apply_checklist` after `apply_extraction` — the apply already runs the default state/type/side template.
-- Don't loop polling forever — cap at 10 minutes wall-clock.
+- Don't wait forever — cap at 10 minutes wall-clock.
