@@ -5,7 +5,7 @@
 # DocJacket — Transaction Coordination plugin for Claude
 
 [![Plugin](https://img.shields.io/badge/Claude-plugin-blue)](https://claude.com/plugins)
-[![Version](https://img.shields.io/badge/version-0.8.1-green)]()
+[![Version](https://img.shields.io/badge/version-0.9.0-green)]()
 [![License](https://img.shields.io/badge/license-MIT-lightgrey)]()
 
 Connect DocJacket transactions, tasks, deadlines, contacts, and document checklists to Claude. Triage your pipeline, draft and send follow-up emails from your connected Gmail/Outlook, classify inbound attachments against the right deal — all from inside Claude.
@@ -18,15 +18,15 @@ Connect DocJacket transactions, tasks, deadlines, contacts, and document checkli
 
 - **Full read + send tool suite** via the DocJacket MCP server at `https://mcp.docjacket.com/mcp`. Call `mcp_catalog` after install for the live inventory + per-tool gotchas and example calls.
 - **`mcp_health_check`** — first call when integrating; verifies auth, scopes, and DB reachability before you start a workflow.
-- **10 skills** ship with this plugin: `closing-prep`, `contact-management`, `contract-intake`, `daily-triage`, `dj-cli`, `document-filing`, `email-triage`, `execution-workflow`, `follow-up-drafting`, `tc-context`. Each is an Agent Skill under `skills/<name>/SKILL.md`; the agent picks them automatically based on what you ask.
+- **14 skills** ship with this plugin: `closing-prep`, `compliance-filing`, `contact-management`, `contract-intake`, `daily-triage`, `deal-updates`, `dj-cli`, `document-filing`, `email-triage`, `execution-workflow`, `follow-up-drafting`, `playbook-builder`, `tc-context`, `workspace-setup`. Each is an Agent Skill under `skills/<name>/SKILL.md`; the agent picks them automatically based on what you ask.
 - **9 slash commands** (Cowork + Claude Code): `/docjacket:morning-briefing`, `/docjacket:whats-next`, `/docjacket:email-triage`, `/docjacket:doc-check`, `/docjacket:weekly-report`, `/docjacket:share-portal`, `/docjacket:intake-contract`, `/docjacket:send-template`, `/docjacket:check-submissions`. See [Slash Commands reference](https://help.docjacket.com/docs/mcp/slash-commands) for what each one does.
 - **Status Reporter** sub-agent (Cowork) — read-only weekly briefing across every active deal.
 
-Three scope tiers — Read (search, summarize), Draft (compose without sending), Actions (send emails, create tasks, update dates). You authorize once at OAuth consent; the chat is the per-call approval gate.
+Three scope tiers — Read (search, summarize), Draft (compose without sending), Actions (send emails, create tasks, update dates). You authorize once at OAuth consent; the chat is the per-call approval gate. Two optional toolsets, **Disclosure packages** and **Offers**, are listed only when you tick them on the DocJacket consent screen; reconnect DocJacket to add one.
 
 ## Tool catalog
 
-Selected highlights below. For the **live and complete** list with per-tool gotchas, pairing hints, and example calls, run `mcp_catalog` after install — the server returns its own enumeration so this README never drifts.
+Selected highlights below. For the **live and complete** list with per-tool gotchas, pairing hints, and example calls, run `mcp_catalog` after install — the server returns its own enumeration so this README never drifts. `get_procedure` returns the step-by-step procedures behind the skills.
 
 | Tool | Purpose |
 |---|---|
@@ -42,8 +42,15 @@ Selected highlights below. For the **live and complete** list with per-tool gotc
 | `list_active_transactions` | Inbox-workflow shortcut — every active deal, optional party / key-date expansion |
 | `search_contacts` / `get_contact` | Contact lookup by name/email/phone/company |
 | `list_email_templates` / `get_email_template` / `render_email_template` | Templated email composition |
-| `send_client_update` / `send_agent_followup` / `send_document_request` / `send_email_to_agent` | Direct execution from your connected Gmail/Outlook |
+| `send_client_update` / `send_agent_followup` / `send_document_request` / `send_email_to_agent` | Preview an email; it goes out from your connected Gmail/Outlook only after your yes (`confirm_email_send`), or waits for a team member's approval |
 | `create_tasks` / `update_key_date` / `complete_task` / `save_status_summary` | Direct execution against DocJacket |
+| `create_upload_link` / `get_upload_link_status` | Get a contract into DocJacket from any client: you drop the PDF on a link |
+| `review_deal_health` / `get_transaction_context` / `get_deal_section` | What is wrong with a deal, its full context, and its notes, email and change log |
+| `update_deal` / `manage_key_date` / `set_key_date_outcome` / `set_task_outcome` / `manage_note` | Change the deal record, key dates, task outcomes and team notes (several with a 7-day undo) |
+| `start_playbook_draft` … `commit_playbook_draft` | Build or change a Playbook through a reviewed draft |
+| `get_setup_status` / `set_agent_defaults` / `save_email_template` / `create_form_template` | Organization setup: agents, fees, templates, forms |
+| `get_compliance_system` / `prepare_compliance_handoff` / `review_signatures` / `send_compliance_documents` | File a deal in Dotloop, SkySlope or KW Command and check signatures |
+| `get_plan` / `get_checkout_link` | Plan, limits and an upgrade link for an owner or admin |
 
 ## Install
 
@@ -107,7 +114,7 @@ Once installed, try:
 
 ## How attribution + revocation work
 
-Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.8.1`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
+Every plugin call carries `X-DocJacket-Source-App: cowork` + `X-DocJacket-Plugin-Version: 0.9.0`. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
 
 ## Optional connectors
 
@@ -118,6 +125,8 @@ The plugin composes with Claude's Gmail, Google Calendar, Google Drive, and Slac
 This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) for the full scope, per-state coverage notes, and liability framing.
 
 ## Version
+
+`0.9.0` (2026-11-15) — Catches up with the current DocJacket MCP server: four new skills (`deal-updates`, `playbook-builder`, `workspace-setup`, `compliance-filing`) cover changing live deals, building Playbooks, organization setup and compliance filing; `contract-intake` adds the upload-link path (`create_upload_link`); skills use the current tool names (`review_deal_health`, `prepare_compliance_handoff`, `get_transaction_context`); stale "no upload tool" and connector text fixed.
 
 `0.8.1` (2026-11-14) — Listing fixes: display name "DocJacket"; documentation, support, privacy and terms links for the directory listing; repository URL points at docjacket-inc; MCP access is included with every DocJacket plan (Free: 100 MCP calls per month).
 
