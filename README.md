@@ -9,6 +9,7 @@ Connect DocJacket transactions, tasks, deadlines, contacts, and document checkli
 ## What you get
 
 - **Full read + send tool suite** via the DocJacket MCP server at `https://mcp.docjacket.com/mcp`. Call `mcp_catalog` after install for the live inventory + per-tool gotchas and example calls.
+- **Where data goes:** the plugin talks only to `https://mcp.docjacket.com/mcp`, except that the `contract-intake` skill can upload a PDF directly to DocJacket's Cloudflare R2 storage through a presigned `*.r2.cloudflarestorage.com` URL issued by DocJacket.
 - **`mcp_health_check`** — first call when integrating; verifies auth, scopes, and DB reachability before you start a workflow.
 - **13 skills** ship with this plugin: `closing-prep`, `compliance-filing`, `contact-management`, `contract-intake`, `daily-triage`, `deal-updates`, `document-filing`, `email-triage`, `execution-workflow`, `follow-up-drafting`, `playbook-builder`, `tc-context`, `workspace-setup`. Each is an Agent Skill under `skills/<name>/SKILL.md`; the agent picks them automatically based on what you ask.
 - **10 slash commands** (Cowork + Claude Code): `/docjacket:daily-triage`, `/docjacket:morning-briefing`, `/docjacket:whats-next`, `/docjacket:email-triage`, `/docjacket:doc-check`, `/docjacket:weekly-report`, `/docjacket:share-portal`, `/docjacket:intake-contract`, `/docjacket:send-template`, `/docjacket:check-submissions`. See [Slash Commands reference](https://help.docjacket.com/docs/mcp/slash-commands) for what each one does.
