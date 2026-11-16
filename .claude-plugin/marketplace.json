@@ -9,7 +9,7 @@
     {
       "name": "docjacket",
       "source": ".",
-      "description": "Connect DocJacket transactions, key dates, tasks, contacts and documents to Claude. Fourteen skills, ten commands and a status-reporter agent; OAuth sign-in, no token to paste. Call mcp_catalog for the live tool list."
+      "description": "Connect DocJacket transactions, key dates, tasks, contacts and documents to Claude. Thirteen skills, ten commands and a status-reporter agent. Sign in to DocJacket in your browser when you install. Call mcp_catalog for the live tool list."
     }
   ]
 }
