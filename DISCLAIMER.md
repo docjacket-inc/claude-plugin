@@ -19,6 +19,6 @@ The `get_missing_documents` tool's baseline (Purchase Agreement, Seller Disclosu
 
 ## Liability
 
-You are responsible for what your AI assistant does with DocJacket data. Audit the [Activity Log](https://app.docjacket.com/settings/ai-access/activity) regularly. Revoke tokens you no longer use. Don't share AI access tokens.
+You are responsible for what your AI assistant does with DocJacket data. Audit the [Activity Log](https://app.docjacket.com/settings/ai-access/activity) regularly. Disconnect any assistant you no longer use in **Settings › AI Access**, and don't let anyone else sign in to DocJacket as you.
 
 For support: support@docjacket.com.

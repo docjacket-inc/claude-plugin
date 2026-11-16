@@ -1,21 +1,17 @@
 # DocJacket — Transaction Coordination plugin for Claude
 
-[DocJacket logo](assets/logo-mark-128.png)
-
-Claude plugin · version 0.9.2 · MIT license
+Claude plugin · version 0.9.3 · MIT license
 
 Connect DocJacket transactions, tasks, deadlines, contacts, and document checklists to Claude. Triage your pipeline, draft and send follow-up emails from your connected Gmail/Outlook, classify inbound attachments against the right deal — all from inside Claude.
 
 **Works with:** Claude.ai (sidebar) · Cowork · Claude Code · Claude Desktop
 
-[Screenshot: DocJacket connector in Claude](assets/screenshots/claude-connector-tools.png)
-
 ## What you get
 
 - **Full read + send tool suite** via the DocJacket MCP server at `https://mcp.docjacket.com/mcp`. Call `mcp_catalog` after install for the live inventory + per-tool gotchas and example calls.
 - **`mcp_health_check`** — first call when integrating; verifies auth, scopes, and DB reachability before you start a workflow.
-- **14 skills** ship with this plugin: `closing-prep`, `compliance-filing`, `contact-management`, `contract-intake`, `daily-triage`, `deal-updates`, `dj-cli`, `document-filing`, `email-triage`, `execution-workflow`, `follow-up-drafting`, `playbook-builder`, `tc-context`, `workspace-setup`. Each is an Agent Skill under `skills/<name>/SKILL.md`; the agent picks them automatically based on what you ask.
-- **9 slash commands** (Cowork + Claude Code): `/docjacket:morning-briefing`, `/docjacket:whats-next`, `/docjacket:email-triage`, `/docjacket:doc-check`, `/docjacket:weekly-report`, `/docjacket:share-portal`, `/docjacket:intake-contract`, `/docjacket:send-template`, `/docjacket:check-submissions`. See [Slash Commands reference](https://help.docjacket.com/docs/mcp/slash-commands) for what each one does.
+- **13 skills** ship with this plugin: `closing-prep`, `compliance-filing`, `contact-management`, `contract-intake`, `daily-triage`, `deal-updates`, `document-filing`, `email-triage`, `execution-workflow`, `follow-up-drafting`, `playbook-builder`, `tc-context`, `workspace-setup`. Each is an Agent Skill under `skills/<name>/SKILL.md`; the agent picks them automatically based on what you ask.
+- **10 slash commands** (Cowork + Claude Code): `/docjacket:daily-triage`, `/docjacket:morning-briefing`, `/docjacket:whats-next`, `/docjacket:email-triage`, `/docjacket:doc-check`, `/docjacket:weekly-report`, `/docjacket:share-portal`, `/docjacket:intake-contract`, `/docjacket:send-template`, `/docjacket:check-submissions`. See [Slash Commands reference](https://help.docjacket.com/docs/mcp/slash-commands) for what each one does.
 - **Status Reporter** sub-agent (Cowork) — read-only weekly briefing across every active deal.
 
 Three scope tiers — Read (search, summarize), Draft (compose without sending), Actions (send emails, create tasks, update dates). You authorize once at OAuth consent; the chat is the per-call approval gate. Two optional toolsets, **Disclosure packages** and **Offers**, are listed only when you tick them on the DocJacket consent screen; reconnect DocJacket to add one.
@@ -50,7 +46,7 @@ Selected highlights below. For the **live and complete** list with per-tool gotc
 
 ## Install
 
-**No bearer tokens. No manual config.** Paste the server URL, click Allow on the consent screen, you're done. OAuth 2.1 + Dynamic Client Registration end-to-end.
+**Sign in with your browser. No manual config.** Paste the server URL, click Allow on the consent screen, you're done. OAuth 2.1 + Dynamic Client Registration end-to-end.
 
 ### Prerequisites
 
@@ -79,7 +75,7 @@ Same flow as Claude.ai:
 /plugin install docjacket@docjacket
 ```
 
-On first tool call, your browser opens to complete OAuth consent. Access + refresh tokens are stored in your local keychain — no secrets in config files.
+On first tool call, your browser opens to the DocJacket sign-in and consent screen. Claude keeps you signed in after that; there is nothing to copy into a config file.
 
 ### Claude Desktop (manual config, advanced)
 
@@ -96,7 +92,7 @@ If you prefer editing `~/Library/Application Support/Claude/claude_desktop_confi
 }
 ```
 
-Restart Claude Desktop. The first tool call triggers OAuth discovery via the WWW-Authenticate challenge — no `Authorization` header to set, no token to mint.
+Restart Claude Desktop. The entry is only the server type and URL, with nothing else to add. The first tool call opens the DocJacket sign-in in your browser.
 
 ## Try it
 
@@ -110,7 +106,7 @@ Once installed, try:
 
 ## How attribution + revocation work
 
-The plugin sends no custom headers. The DocJacket audit log labels each call from the OAuth client name the Claude app registers with: Claude, Claude.ai and Claude Code show as `claude`, Claude Desktop as `claude-desktop`, and Cowork as `cowork`. No plugin version is recorded. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. Revoke any connected client from `/settings/ai-access` without affecting other AI assistants (Codex, ChatGPT, etc.).
+The plugin sends no custom headers. The DocJacket audit log labels each call from the OAuth client name the Claude app registers with: Claude, Claude.ai and Claude Code show as `claude`, Claude Desktop as `claude-desktop`, and Cowork as `cowork`. No plugin version is recorded. Audit them in [Activity Log](https://app.docjacket.com/settings/ai-access/activity) — filter by source, drill into per-OAuth-client activity. To disconnect an assistant, open **Settings › AI Access** in DocJacket and disconnect it there; other AI assistants (Codex, ChatGPT, etc.) stay connected.
 
 ## Optional connectors
 
@@ -122,21 +118,23 @@ This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) 
 
 ## Version
 
-`0.9.2` (2026-11-15) — Clears the remaining directory holds for organizations that are not Anthropic-Verified. The MCP server entry in `.claude-plugin/plugin.json` is now just `type` and `url`: the `X-DocJacket-Source-App` and `X-DocJacket-Plugin-Version` headers are gone, sign-in stays OAuth, and the audit log labels calls from the OAuth client name the Claude app registers with (Claude, Claude.ai and Claude Code as `claude`, Claude Desktop as `claude-desktop`, Cowork as `cowork`), with no plugin version. The README no longer embeds images (the logo and screenshot are plain links; the image files stay), and the Status Reporter agent's `connector` field moves from its frontmatter into a comment under it.
+`0.9.3` (2026-11-15) — Clears the two directory policy holds left on 0.9.2. The listing icon now sits in the plugin's manifest folder as a plain PNG with its metadata chunks removed, the `icon` field is gone from `plugin.json`, and the separate logo and screenshot files are removed along with every README mention of them. The `dj-cli` skill is no longer part of the Claude package (the Codex package still carries it): it needs a separate command-line install and local setup, and the DocJacket connector covers the same reads with browser sign-in, so 13 skills ship. The manifest descriptions, install notes and disclaimer describe browser sign-in and disconnecting an assistant in Settings › AI Access in plain words. The Status Reporter agent's frontmatter keeps only `name` and `description`; its display name, version, scopes and tool list move into the comment under it.
 
-`0.9.1` (2026-11-15) — Meets Anthropic's directory file and field rules for organizations that are not Anthropic-Verified. The MCP server entry moves from `.mcp.json` into `.claude-plugin/plugin.json` (`mcpServers`, same URL and headers); `LICENSE` is now `LICENSE.txt`; the SVG logo is removed (the PNG sizes stay); skill and agent frontmatter is plain `key: value` lines (skill metadata moves to a comment under the frontmatter); the stray `categories` field is gone; README badges no longer load remote images; `dj-cli` no longer shows a download-and-run install command, and `contract-intake` describes the sandbox upload without a shell upload command and points to the upload link first. Skills also follow the current tool names: `get_open_tasks` (read its `summary` for the task counts) and `search_contacts` with `contactId` for one contact in full, instead of two names `tools/list` now hides.
+`0.9.2` (2026-11-15) — Clears the remaining directory holds for organizations that are not Anthropic-Verified. The MCP server entry in `.claude-plugin/plugin.json` is now just `type` and `url`: the `X-DocJacket-Source-App` and `X-DocJacket-Plugin-Version` headers are gone, sign-in stays OAuth, and the audit log labels calls from the OAuth client name the Claude app registers with (Claude, Claude.ai and Claude Code as `claude`, Claude Desktop as `claude-desktop`, Cowork as `cowork`), with no plugin version. The README no longer embeds images, and the Status Reporter agent's `connector` field moves from its frontmatter into a comment under it.
+
+`0.9.1` (2026-11-15) — Meets Anthropic's directory file and field rules for organizations that are not Anthropic-Verified. The MCP server entry moves from `.mcp.json` into `.claude-plugin/plugin.json` (`mcpServers`, same URL and headers); `LICENSE` is now `LICENSE.txt`; the vector logo is removed; skill and agent frontmatter is plain `key: value` lines (skill metadata moves to a comment under the frontmatter); the stray `categories` field is gone; README badges no longer load remote images; `dj-cli` no longer shows a download-and-run install command, and `contract-intake` describes the sandbox upload without a shell upload command and points to the upload link first. Skills also follow the current tool names: `get_open_tasks` (read its `summary` for the task counts) and `search_contacts` with `contactId` for one contact in full, instead of two names `tools/list` now hides.
 
 `0.9.0` (2026-11-15) — Catches up with the current DocJacket MCP server: four new skills (`deal-updates`, `playbook-builder`, `workspace-setup`, `compliance-filing`) cover changing live deals, building Playbooks, organization setup and compliance filing; `contract-intake` adds the upload-link path (`create_upload_link`); skills use the current tool names (`review_deal_health`, `prepare_compliance_handoff`, `get_transaction_context`); stale "no upload tool" and connector text fixed.
 
 `0.8.1` (2026-11-14) — Listing fixes: display name "DocJacket"; documentation, support, privacy and terms links for the directory listing; repository URL points at docjacket-inc; MCP access is included with every DocJacket plan (Free: 100 MCP calls per month).
 
-`0.8.0` (2026-11-14) — Claude plugin layout (`.claude-plugin/plugin.json`, `skills/<name>/SKILL.md`, `.mcp.json`); all ten skills (adds `contract-intake` and `dj-cli`) as valid Agent Skills; OAuth sign-in only, no pasted token. Every email is shown to you and goes out only after you say yes, or waits for a team member's approval in DocJacket if your organization reviews emails.
+`0.8.0` (2026-11-14) — Claude plugin layout (`.claude-plugin/plugin.json`, `skills/<name>/SKILL.md`, `.mcp.json`); all ten skills (adds `contract-intake` and `dj-cli`) as valid Agent Skills; browser sign-in only, nothing to paste. Every email is shown to you and goes out only after you say yes, or waits for a team member's approval in DocJacket if your organization reviews emails.
 
 `0.6.1` (2026-05-20) — Adds three new slash commands: `/docjacket:whats-next` (ranked task + key-date feed), `/docjacket:send-template` (pick template → render → send via connected Gmail/Outlook), `/docjacket:check-submissions` (review new intake-form submissions). Tracks DocJacket MCP server PR #563.
 
 `0.6.0` (2026-05-19) — Catches up to the v0.6 internal source: 8 skills (was 1), 6 commands (was 1), inbox-workflow tool set including Draft + Actions scopes. New diagnostic tools `mcp_health_check` and `mcp_catalog`. Every tool response now includes `structuredContent` + opt-in `breadcrumbs` per MCP spec 2025-06-18 §Tool Result. Tracks DocJacket MCP server PRs #549–#551.
 
-`0.3.0` (2026-05-18) — OAuth 2.1 + Dynamic Client Registration. Paste-URL-and-go install — no bearer tokens, no manual config. Tracks DocJacket MCP server PR #494 (HTTP 401 + WWW-Authenticate + `initialize` handshake).
+`0.3.0` (2026-05-18) — OAuth 2.1 + Dynamic Client Registration. Paste-URL-and-go install — nothing to paste but the URL, no manual config. Tracks DocJacket MCP server PR #494 (HTTP 401 + WWW-Authenticate + `initialize` handshake).
 
 `0.2.0` (2026-05-18) — Daily Triage collapsed to one call (`get_next_required_actions`); 10 read tools live. Tracks DocJacket MCP server v0.9 + Plugin Cycle 3.
 
@@ -154,14 +152,3 @@ This plugin does NOT provide legal advice. See [`DISCLAIMER.md`](DISCLAIMER.md) 
 
 - Issues: <https://github.com/docjacket-inc/claude-plugin/issues>
 - Email: support@docjacket.com
-
-## Brand assets
-
-| File | Size | Use |
-|---|---|---|
-| [`assets/logo-mark-32.png`](assets/logo-mark-32.png) | 32×32 | favicon, dense list rows |
-| [`assets/logo-mark-64.png`](assets/logo-mark-64.png) | 64×64 | small directory cards |
-| [`assets/logo-mark-128.png`](assets/logo-mark-128.png) | 128×128 | plugin manifest icon |
-| [`assets/logo-mark-256.png`](assets/logo-mark-256.png) | 256×256 | medium cards |
-| [`assets/logo-mark-512.png`](assets/logo-mark-512.png) | 512×512 | marketplace tile |
-| [`assets/logo-mark-1024.png`](assets/logo-mark-1024.png) | 1024×1024 | hero / future-proof |

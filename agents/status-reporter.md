@@ -1,13 +1,13 @@
 ---
 name: status-reporter
-displayName: Status Reporter
-version: 0.1.0
 description: Pulls a read-only status snapshot of every active transaction. Use it as your weekly briefing seed before drafting client updates.
-required_scopes: read
-tools_allowed: DocJacket.search_transactions, DocJacket.get_transaction, DocJacket.get_key_dates, DocJacket.get_open_tasks, DocJacket.get_upcoming_key_dates, DocJacket.get_next_required_actions
 ---
 <!--
 docjacket-connector: docjacket
+docjacket-display-name: Status Reporter
+docjacket-version: 0.1.0
+docjacket-scopes: read
+docjacket-tools: DocJacket.search_transactions, DocJacket.get_transaction, DocJacket.get_key_dates, DocJacket.get_open_tasks, DocJacket.get_upcoming_key_dates, DocJacket.get_next_required_actions
 -->
 
 # Status Reporter
